@@ -68,24 +68,27 @@ def generate_word():
             content = response.json()['choices'][0]['message']['content']
             lines = content.split("\n")
 
-            # ✅ Find the line that starts with "Word:"
+            # Extract the word correctly
             word = None
             for line in lines:
                 if line.startswith("Word:"):
                     word = line.replace("Word:", "").strip()
-                    break  # Stop looping after finding the word
+                    break  # Stop once the word is found
 
-            if word and word not in history:  # Ensure it's a new word
-                save_word(word)  # Save only the word
-                return content  # Return full content for posting
+            if word:  # If a word was extracted
+                if not history or word not in history:  # Allow first word if history is empty
+                    save_word(word)  # Save only the word
+                    return content
+                else:
+                    print(f"⚠️ Duplicate word ({word}). Retrying...")
             else:
-                print("⚠️ Duplicate or invalid word. Retrying...")
+                print("⚠️ Invalid response format. Retrying...")
 
         elif response.status_code == 429:  # Rate limit error
             print("⚠️ Rate limit exceeded! Waiting 30 seconds before retrying...")
             time.sleep(30)  # Wait before retrying
         else:
-            print(" Mistral API Error:", response.json())
+            print("Mistral API Error:", response.json())
 
         attempts += 1
 
