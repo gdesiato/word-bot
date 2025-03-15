@@ -1,36 +1,26 @@
+import requests
 import os
-import openai
-from dotenv import load_dotenv
-from mastodon import Mastodon
 
-# Load environment variables
-load_dotenv()
-
-# Get API keys
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-MASTODON_ACCESS_TOKEN = os.getenv("MASTODON_ACCESS_TOKEN")
-
-# Set OpenAI API key
-client = openai.OpenAI(api_key=OPENAI_API_KEY)
+# Load API Key from environment variables
+API_KEY = os.getenv("MISTRAL_API_KEY")
 
 def generate_word():
-    prompt = (
-        "Generate a random Italian word, an example sentence using it, and its English translation. "
-        "Format the output as:\n\nWord: <word>\nExample: <example sentence>\nTranslation: <translation>"
-    )
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return response.choices[0].message.content
+    prompt = "Generate a random Italian word, an example sentence using it, and its English translation."
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    json_data = {
+        "model": "mistral-medium",
+        "messages": [{"role": "user", "content": prompt}]
+    }
+    response = requests.post("https://api.mistral.ai/v1/chat/completions", headers=headers, json=json_data)
 
-def post_to_mastodon(text):
-    mastodon = Mastodon(access_token=MASTODON_ACCESS_TOKEN, api_base_url="https://mastodon.social")
-    mastodon.status_post(text)
+    if response.status_code == 200:
+        return response.json()['choices'][0]['message']['content']
+    else:
+        return f"Error: {response.json()}"
 
 if __name__ == "__main__":
-    content = generate_word()
-    post_content = f"📖 Word of the Day:\n{content}\n\n#ItalianWord #LearnItalian"
-
-    post_to_mastodon(post_content)
-    print("Post sent!")
+    word = generate_word()
+    print(word)  # Print to check output (optional)
