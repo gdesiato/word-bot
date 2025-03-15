@@ -1,5 +1,5 @@
 import time
-import datetime 
+import datetime
 import requests
 import os
 from mastodon import Mastodon
@@ -36,9 +36,8 @@ def generate_word():
         print("Error: MISTRAL_API_KEY is not set! Exiting.")
         exit(1)
 
-    history = load_history()  # Load history first
-    past_words = ", ".join(history) if history else "None"  # Ensure past words are defined
-
+    history = load_history()
+    past_words = ", ".join(history) if history else "None"
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     prompt = f"""
@@ -84,13 +83,13 @@ def generate_word():
             content = response.json()['choices'][0]['message']['content']
             print("Extracted Content from API:\n", content)
 
-            lines = content.split("\n")
+            lines = [line.strip() for line in content.split("\n") if line.strip()]  # Remove empty lines
 
-            # Fix: Extract the first non-empty word after "Word:"
+            # Extract word
             word = None
-            for i in range(len(lines)):
-                if lines[i].strip().lower() == "word:" and i + 1 < len(lines):
-                    word = lines[i + 1].strip()  # Get the next line as the word
+            for line in lines:
+                if line.lower().startswith("word:"):
+                    word = line.split(":", 1)[1].strip()  # Get the word after "Word:"
                     break
 
             if word:
@@ -100,14 +99,14 @@ def generate_word():
                 else:
                     print(f"Duplicate word ({word}). Retrying...")
             else:
-                print("Invalid response format. Retrying...")
+                print("⚠️ Invalid response format. Retrying...")
 
         elif response.status_code == 401:
             print("ERROR: Unauthorized! Check if your MISTRAL_API_KEY is correct.")
             exit(1)
 
         elif response.status_code == 429:
-            print("Rate limit exceeded! Waiting 30 seconds before retrying...")
+            print("⚠️ Rate limit exceeded! Waiting 30 seconds before retrying...")
             time.sleep(30)
         else:
             print("Mistral API Error:", response.json())
@@ -115,6 +114,7 @@ def generate_word():
         attempts += 1
 
     return None
+
 
 
 def post_to_mastodon(text):
