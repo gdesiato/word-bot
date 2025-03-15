@@ -9,22 +9,19 @@ MASTODON_ACCESS_TOKEN = os.getenv("MASTODON_ACCESS_TOKEN")
 HISTORY_FILE = "history.txt"  # File to store past words
 
 def load_history():
+    """Loads past words from history.txt to prevent duplicates."""
     try:
-        with open("history.txt", "r", encoding="utf-8") as file:
-            return {
-                line.strip().split(":")[1]  # Extracts words
-                for line in file
-                if line.strip() and ":" in line
-            }
+        with open(HISTORY_FILE, "r", encoding="utf-8") as file:
+            return {line.strip() for line in file if line.strip()}  # Only store words
     except FileNotFoundError:
-        return set()  # Returns an empty set if history.txt doesn't exist
+        return set()  # If the file doesn't exist, start with an empty set
 
-def save_word(word, content):
-    """Saves the new word to the history file and commits it to GitHub."""
+def save_word(word):
+    """Saves the new word to history.txt and commits it to GitHub."""
     with open(HISTORY_FILE, "a", encoding="utf-8") as file:
-        file.write(f"{word}: {content}\n")
+        file.write(f"{word}\n")  # Saves only the word, not the full post
 
-    # Commit & push changes to GitHub
+    # Commit & push changes to GitHub if a new word is found
     subprocess.run(["git", "config", "--global", "user.name", "GitHub Actions Bot"])
     subprocess.run(["git", "config", "--global", "user.email", "actions@github.com"])
     subprocess.run(["git", "add", HISTORY_FILE])
@@ -32,7 +29,7 @@ def save_word(word, content):
     subprocess.run(["git", "push"])
 
 def generate_word():
-    """Fetches a random Italian word, example sentence, and English translation from Mistral AI."""
+    """Fetches a random Italian word, ensuring uniqueness."""
     prompt = """
     Generate a random Italian word and provide the following format with clear spacing:
 
@@ -64,18 +61,18 @@ def generate_word():
 
         if response.status_code == 200:
             content = response.json()['choices'][0]['message']['content']
-            lines = content.split("\n")  # Extract the word
-            word = lines[0].replace("Word: ", "").strip()
+            lines = content.split("\n")
+            word = lines[0].replace("Word: ", "").strip()  # Extract only the word
 
-            if word not in history:  # Check if it's new
-                save_word(word, content)  # Save to history & commit to GitHub
-                return content
+            if word not in history:  # Prevent duplicates
+                save_word(word)  # Save only the word
+                return content  # Return full content for posting
         else:
             print("Mistral API Error:", response.json())
 
         attempts += 1
 
-    return "Error: Could not generate a new word."
+    return None  # Return None if no new word is found
 
 def post_to_mastodon(text):
     """Posts the generated word and sentence to Mastodon."""
@@ -88,9 +85,9 @@ def post_to_mastodon(text):
 
 if __name__ == "__main__":
     content = generate_word()
-    print("Generated Content:\n", content)  # Debugging: Print content before posting
 
-    if "Error" not in content:  # Prevents posting if Mistral API fails
+    if content:
+        print("Generated Content:\n", content)  # Debugging: Print content before posting
         post_to_mastodon(f"📖 Word of the Day:\n\n{content}")
     else:
-        print("Error detected, not posting.")
+        print("No new word found. Nothing will be posted.")
