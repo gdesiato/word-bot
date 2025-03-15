@@ -1,14 +1,13 @@
-import time
 import datetime
 import requests
 import os
+import time
 from mastodon import Mastodon
-import subprocess  # To push updates to GitHub
+import subprocess
 
-# Load API keys from environment variables
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 MASTODON_ACCESS_TOKEN = os.getenv("MASTODON_ACCESS_TOKEN")
-HISTORY_FILE = "history.txt"  # File to store past words
+HISTORY_FILE = "history.txt"
 
 def load_history():
     """Loads past words from history.txt to prevent duplicates."""
@@ -23,15 +22,23 @@ def save_word(word):
     with open(HISTORY_FILE, "a", encoding="utf-8") as file:
         file.write(f"{word}\n")
 
-    # Commit & push changes to GitHub if a new word is found
     subprocess.run(["git", "config", "--global", "user.name", "GitHub Actions Bot"])
     subprocess.run(["git", "config", "--global", "user.email", "actions@github.com"])
     subprocess.run(["git", "add", HISTORY_FILE])
     subprocess.run(["git", "commit", "-m", f"Updated history with new word: {word}"])
     subprocess.run(["git", "push"])
 
+def is_valid_italian_word(word):
+    """Checks if the word exists in Italian using Wiktionary API."""
+    url = f"https://it.wiktionary.org/w/api.php?action=query&titles={word}&format=json"
+    response = requests.get(url)
+    data = response.json()
+
+    # If the page exists, the word is valid
+    return "-1" not in data["query"]["pages"]
+
 def generate_word():
-    """Fetches a random Italian word, ensuring uniqueness."""
+    """Fetches a random Italian word, ensuring uniqueness and validity."""
     if not MISTRAL_API_KEY:
         print("Error: MISTRAL_API_KEY is not set! Exiting.")
         exit(1)
@@ -44,7 +51,7 @@ def generate_word():
     As of {timestamp}, generate a random Italian word that is NOT commonly used.
     Do NOT use these words: {past_words}
 
-    The word MUST be different from previous outputs.
+    The word MUST be different from previous outputs and MUST be a real word in the Italian language.
 
     Format the response exactly as follows:
 
@@ -83,30 +90,32 @@ def generate_word():
             content = response.json()['choices'][0]['message']['content']
             print("Extracted Content from API:\n", content)
 
-            lines = [line.strip() for line in content.split("\n") if line.strip()]  # Remove empty lines
+            lines = [line.strip() for line in content.split("\n") if line.strip()]
 
-            # Extract word
             word = None
             for line in lines:
                 if line.lower().startswith("word:"):
-                    word = line.split(":", 1)[1].strip()  # Get the word after "Word:"
+                    word = line.split(":", 1)[1].strip()
                     break
 
             if word:
                 if not history or word not in history:
-                    save_word(word)
-                    return content
+                    if is_valid_italian_word(word):  # ✅ Check if word is real
+                        save_word(word)
+                        return content
+                    else:
+                        print(f"Invalid Italian word ({word}). Retrying...")
                 else:
                     print(f"Duplicate word ({word}). Retrying...")
             else:
-                print("⚠️ Invalid response format. Retrying...")
+                print("Invalid response format. Retrying...")
 
         elif response.status_code == 401:
             print("ERROR: Unauthorized! Check if your MISTRAL_API_KEY is correct.")
             exit(1)
 
         elif response.status_code == 429:
-            print("⚠️ Rate limit exceeded! Waiting 30 seconds before retrying...")
+            print("Rate limit exceeded! Waiting 30 seconds before retrying...")
             time.sleep(30)
         else:
             print("Mistral API Error:", response.json())
