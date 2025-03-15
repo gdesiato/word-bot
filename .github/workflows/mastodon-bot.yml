@@ -3,7 +3,7 @@ name: Daily Mastodon Post
 on:
   schedule:
     - cron: "0 7 * * *" 
-  workflow_dispatch:
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   post:
@@ -18,10 +18,10 @@ jobs:
           python-version: "3.10"
 
       - name: Install dependencies
-        run: pip install requests python-dotenv
+        run: pip install requests python-dotenv Mastodon.py  # ✅ Ensures Mastodon.py is installed
 
       - name: Run the bot
         env:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
         run: python bot.py
-
