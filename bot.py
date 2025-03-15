@@ -31,6 +31,10 @@ def save_word(word):
 
 def generate_word():
     """Fetches a random Italian word, ensuring uniqueness."""
+    if not MISTRAL_API_KEY:
+        print("Error: MISTRAL_API_KEY is not set! Exiting.")
+        exit(1)
+
     prompt = """
     Generate a random Italian word and provide the following format with clear spacing:
 
@@ -65,8 +69,15 @@ def generate_word():
         )
 
         if response.status_code == 200:
-            content = response.json()['choices'][0]['message']['content']
-            lines = content.split("\n")
+        # ✅ Print the full response JSON to check its format
+        print("🔍 Full Mistral API JSON Response:", response.json())
+
+        content = response.json()['choices'][0]['message']['content']
+
+        # ✅ Print the raw content for further debugging
+        print("🔍 Extracted Content from API:\n", content)
+
+        lines = content.split("\n")  # FIX: Ensure `lines` is defined before using it
 
             # Extract the word correctly
             word = None
@@ -83,6 +94,10 @@ def generate_word():
                     print(f"⚠️ Duplicate word ({word}). Retrying...")
             else:
                 print("⚠️ Invalid response format. Retrying...")
+
+        elif response.status_code == 401:  # Unauthorized error
+            print("ERROR: Unauthorized! Check if your MISTRAL_API_KEY is correct.")
+            exit(1)  # Stops execution if API key is invalid
 
         elif response.status_code == 429:  # Rate limit error
             print("⚠️ Rate limit exceeded! Waiting 30 seconds before retrying...")
