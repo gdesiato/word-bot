@@ -8,7 +8,18 @@ MASTODON_ACCESS_TOKEN = os.getenv("MASTODON_ACCESS_TOKEN")
 
 def generate_word():
     """Fetches a random Italian word, an example sentence, and an English translation from Mistral AI."""
-    prompt = "Generate a random Italian word, an example sentence using it, and its English translation. Then add on a new line these hashtags: #Italian #LearnItalian #ItalianWord"
+    prompt = """
+Generate a random Italian word and provide the following format:
+
+Word: [Italian word]
+Example sentence: "[Example sentence in Italian]"
+
+Translation: "[English translation]"
+
+Hashtags: #Italian #LearnItalian #ItalianWord
+
+Ensure the output follows this exact format with no additional text.
+"""
     headers = {
         "Authorization": f"Bearer {MISTRAL_API_KEY}",
         "Content-Type": "application/json"
