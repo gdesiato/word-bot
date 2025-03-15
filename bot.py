@@ -1,13 +1,16 @@
 import requests
 import os
+from mastodon import Mastodon
 
-# Load API Key from environment variables
-API_KEY = os.getenv("MISTRAL_API_KEY")
+# Load API Keys from environment variables
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+MASTODON_ACCESS_TOKEN = os.getenv("MASTODON_ACCESS_TOKEN")
 
 def generate_word():
-    prompt = "Generate a random Italian word, an example sentence using it, and its English translation."
+    """Fetches a random Italian word, an example sentence, and an English translation from Mistral AI."""
+    prompt = "Generate a random Italian word, an example sentence using it, and its English translation. Then add on a new line these hashtags: #Italian #LearnItalian #ItalianWord"
     headers = {
-        "Authorization": f"Bearer {API_KEY}",
+        "Authorization": f"Bearer {MISTRAL_API_KEY}",
         "Content-Type": "application/json"
     }
     json_data = {
@@ -21,6 +24,20 @@ def generate_word():
     else:
         return f"Error: {response.json()}"
 
+def post_to_mastodon(text):
+    """Posts the generated word and sentence to Mastodon."""
+    mastodon = Mastodon(
+        access_token=MASTODON_ACCESS_TOKEN,
+        api_base_url="https://mastodon.social"  # Change if your bot is on a different instance
+    )
+    mastodon.status_post(text)
+    print("Post sent to Mastodon!")
+
 if __name__ == "__main__":
-    word = generate_word()
-    print(word)  # Print to check output (optional)
+    content = generate_word()
+    print("Generated Content:", content)  # Debugging: Print content before posting
+
+    if "Error" not in content:  # Prevents posting if Mistral API fails
+        post_to_mastodon(f"📖 Word of the Day:\n{content}\n\n#ItalianWord #LearnItalian")
+    else:
+        print("Error detected, not posting.")
