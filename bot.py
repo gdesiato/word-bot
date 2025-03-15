@@ -1,3 +1,4 @@
+import time
 import requests
 import os
 from mastodon import Mastodon
