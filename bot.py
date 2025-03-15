@@ -1,4 +1,5 @@
 import time
+import datetime 
 import requests
 import os
 from mastodon import Mastodon
@@ -35,8 +36,18 @@ def generate_word():
         print("Error: MISTRAL_API_KEY is not set! Exiting.")
         exit(1)
 
-    prompt = """
-    Generate a random Italian word and provide the following format with clear spacing:
+    history = load_history()  # Load history first
+    past_words = ", ".join(history) if history else "None"  # Ensure past words are defined
+
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    prompt = f"""
+    As of {timestamp}, generate a random Italian word that is NOT commonly used.
+    Do NOT use these words: {past_words}
+
+    The word MUST be different from previous outputs.
+
+    Format the response exactly as follows:
 
     Word: [Italian word]
 
@@ -57,7 +68,6 @@ def generate_word():
         "Content-Type": "application/json"
     }
 
-    history = load_history()
     attempts = 0
     max_attempts = 5
 
