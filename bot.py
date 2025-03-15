@@ -13,14 +13,14 @@ def load_history():
     """Loads past words from history.txt to prevent duplicates."""
     try:
         with open(HISTORY_FILE, "r", encoding="utf-8") as file:
-            return {line.strip() for line in file if line.strip()}  # Only store words
+            return {line.strip() for line in file if line.strip()}
     except FileNotFoundError:
-        return set()  # If the file doesn't exist, start with an empty set
+        return set()
 
 def save_word(word):
     """Saves the new word to history.txt and commits it to GitHub."""
     with open(HISTORY_FILE, "a", encoding="utf-8") as file:
-        file.write(f"{word}\n")  # Saves only the word, not the full post
+        file.write(f"{word}\n")
 
     # Commit & push changes to GitHub if a new word is found
     subprocess.run(["git", "config", "--global", "user.name", "GitHub Actions Bot"])
@@ -57,9 +57,9 @@ def generate_word():
         "Content-Type": "application/json"
     }
 
-    history = load_history()  # Load past words
+    history = load_history()
     attempts = 0
-    max_attempts = 5  # Prevent infinite loops
+    max_attempts = 5
 
     while attempts < max_attempts:
         response = requests.post(
@@ -68,46 +68,42 @@ def generate_word():
             json={"model": "mistral-medium", "messages": [{"role": "user", "content": prompt}]}
         )
 
-         if response.status_code == 200:
-            # Print the full response JSON to check its format
+        if response.status_code == 200:
             print("Full Mistral API JSON Response:", response.json())
 
             content = response.json()['choices'][0]['message']['content']
-
-            # Print the raw content for further debugging
             print("Extracted Content from API:\n", content)
 
-            lines = content.split("\n")  # FIX: Ensure `lines` is defined before using it
+            lines = content.split("\n")
 
-            # Extract the word correctly
             word = None
             for line in lines:
                 if line.startswith("Word:"):
                     word = line.replace("Word:", "").strip()
-                    break  # Stop once the word is found
+                    break
 
-            if word:  # If a word was extracted
-                if not history or word not in history:  # Allow first word if history is empty
-                    save_word(word)  # Save only the word
+            if word:
+                if not history or word not in history:
+                    save_word(word)
                     return content
                 else:
                     print(f"Duplicate word ({word}). Retrying...")
             else:
                 print("Invalid response format. Retrying...")
 
-        elif response.status_code == 401:  # Unauthorized error
+        elif response.status_code == 401:
             print("ERROR: Unauthorized! Check if your MISTRAL_API_KEY is correct.")
-            exit(1)  # Stops execution if API key is invalid
+            exit(1)
 
-        elif response.status_code == 429:  # Rate limit error
-            print("⚠️ Rate limit exceeded! Waiting 30 seconds before retrying...")
-            time.sleep(30)  # Wait before retrying
+        elif response.status_code == 429:
+            print("Rate limit exceeded! Waiting 30 seconds before retrying...")
+            time.sleep(30)
         else:
             print("Mistral API Error:", response.json())
 
         attempts += 1
 
-    return None  # Return None if no new word is found
+    return None
 
 def post_to_mastodon(text):
     """Posts the generated word and sentence to Mastodon."""
@@ -122,7 +118,7 @@ if __name__ == "__main__":
     content = generate_word()
 
     if content:
-        print("Generated Content:\n", content)  # Debugging: Print content before posting
+        print("Generated Content:\n", content)
         post_to_mastodon(f"Word of the Day:\n\n{content}")
     else:
         print("No new word found. Nothing will be posted.")
