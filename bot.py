@@ -76,10 +76,11 @@ def generate_word():
 
             lines = content.split("\n")
 
+            # Fix: Extract the first non-empty word after "Word:"
             word = None
-            for line in lines:
-                if line.startswith("Word:"):
-                    word = line.replace("Word:", "").strip()
+            for i in range(len(lines)):
+                if lines[i].strip().lower() == "word:" and i + 1 < len(lines):
+                    word = lines[i + 1].strip()  # Get the next line as the word
                     break
 
             if word:
@@ -104,6 +105,7 @@ def generate_word():
         attempts += 1
 
     return None
+
 
 def post_to_mastodon(text):
     """Posts the generated word and sentence to Mastodon."""
