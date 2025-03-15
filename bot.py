@@ -9,11 +9,15 @@ MASTODON_ACCESS_TOKEN = os.getenv("MASTODON_ACCESS_TOKEN")
 HISTORY_FILE = "history.txt"  # File to store past words
 
 def load_history():
-    """Loads previously used words from a file."""
-    if os.path.exists(HISTORY_FILE):
-        with open(HISTORY_FILE, "r", encoding="utf-8") as file:
-            return {line.strip().split(":")[1] for line in file if line.strip()}  # Extracts words
-    return set()
+    try:
+        with open("history.txt", "r", encoding="utf-8") as file:
+            return {
+                line.strip().split(":")[1]  # Extracts words
+                for line in file
+                if line.strip() and ":" in line
+            }
+    except FileNotFoundError:
+        return set()  # Returns an empty set if history.txt doesn't exist
 
 def save_word(word, content):
     """Saves the new word to the history file and commits it to GitHub."""
