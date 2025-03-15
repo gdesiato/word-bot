@@ -68,16 +68,16 @@ def generate_word():
             json={"model": "mistral-medium", "messages": [{"role": "user", "content": prompt}]}
         )
 
-        if response.status_code == 200:
-        # ✅ Print the full response JSON to check its format
-        print("🔍 Full Mistral API JSON Response:", response.json())
+         if response.status_code == 200:
+            # Print the full response JSON to check its format
+            print("Full Mistral API JSON Response:", response.json())
 
-        content = response.json()['choices'][0]['message']['content']
+            content = response.json()['choices'][0]['message']['content']
 
-        # ✅ Print the raw content for further debugging
-        print("🔍 Extracted Content from API:\n", content)
+            # Print the raw content for further debugging
+            print("Extracted Content from API:\n", content)
 
-        lines = content.split("\n")  # FIX: Ensure `lines` is defined before using it
+            lines = content.split("\n")  # FIX: Ensure `lines` is defined before using it
 
             # Extract the word correctly
             word = None
@@ -91,9 +91,9 @@ def generate_word():
                     save_word(word)  # Save only the word
                     return content
                 else:
-                    print(f"⚠️ Duplicate word ({word}). Retrying...")
+                    print(f"Duplicate word ({word}). Retrying...")
             else:
-                print("⚠️ Invalid response format. Retrying...")
+                print("Invalid response format. Retrying...")
 
         elif response.status_code == 401:  # Unauthorized error
             print("ERROR: Unauthorized! Check if your MISTRAL_API_KEY is correct.")
@@ -123,6 +123,6 @@ if __name__ == "__main__":
 
     if content:
         print("Generated Content:\n", content)  # Debugging: Print content before posting
-        post_to_mastodon(f"📖 Word of the Day:\n\n{content}")
+        post_to_mastodon(f"Word of the Day:\n\n{content}")
     else:
         print("No new word found. Nothing will be posted.")
