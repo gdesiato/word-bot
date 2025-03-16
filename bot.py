@@ -58,7 +58,7 @@ def generate_word():
     Word: [Italian word]
 
     Example sentence:
-    "[Example sentence in Italian with that exact word]"
+    "[Example sentence in Italian using that word]"
 
     Translation:
     "[English translation]"
