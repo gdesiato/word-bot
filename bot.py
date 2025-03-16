@@ -48,7 +48,7 @@ def generate_word():
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     prompt = f"""
-    As of {timestamp}, generate a random Italian word that is NOT commonly used.
+    As of {timestamp}, generate a random Italian word that is commonly used but not overly basic.
     Do NOT use these words: {past_words}
 
     The word MUST be different from previous outputs and MUST be a real word in the Italian language.
@@ -58,7 +58,7 @@ def generate_word():
     Word: [Italian word]
 
     Example sentence:
-    "[Example sentence in Italian]"
+    "[Example sentence in Italian with that exact word]"
 
     Translation:
     "[English translation]"
