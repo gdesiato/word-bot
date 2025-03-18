@@ -22,20 +22,25 @@ def save_word(word):
     with open(HISTORY_FILE, "a", encoding="utf-8") as file:
         file.write(f"{word}\n")
 
-    subprocess.run(["git", "config", "--global", "user.name", "GitHub Actions Bot"])
-    subprocess.run(["git", "config", "--global", "user.email", "actions@github.com"])
-    subprocess.run(["git", "add", HISTORY_FILE])
-    subprocess.run(["git", "commit", "-m", f"Updated history with new word: {word}"])
-    subprocess.run(["git", "push"])
+    try:
+        subprocess.run(["git", "config", "--global", "user.name", "GitHub Actions Bot"], check=True)
+        subprocess.run(["git", "config", "--global", "user.email", "actions@github.com"], check=True)
+        subprocess.run(["git", "add", HISTORY_FILE], check=True)
+        subprocess.run(["git", "commit", "-m", f"Updated history with new word: {word}"], check=True)
+        subprocess.run(["git", "push"], check=True)
+    except subprocess.CalledProcessError:
+        print("Git commit failed, but execution will continue.")
 
 def is_valid_italian_word(word):
     """Checks if the word exists in Italian using Wiktionary API."""
     url = f"https://it.wiktionary.org/w/api.php?action=query&titles={word}&format=json"
-    response = requests.get(url)
-    data = response.json()
-
-    # If the page exists, the word is valid
-    return "-1" not in data["query"]["pages"]
+    try:
+        response = requests.get(url, timeout=5)
+        data = response.json()
+        return "-1" not in data.get("query", {}).get("pages", {})
+    except requests.exceptions.RequestException as e:
+        print(f"Wiktionary API request failed: {e}")
+        return True  # Assume valid if API fails to avoid blocking execution
 
 def generate_word():
     """Fetches a random Italian word, ensuring uniqueness and validity."""
@@ -44,12 +49,12 @@ def generate_word():
         exit(1)
 
     history = load_history()
-    past_words = ", ".join(history) if history else "None"
+    past_words = list(history)[-50:] if history else []  # Limit to last 50 words
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     prompt = f"""
     As of {timestamp}, generate a random Italian word that is commonly used but not overly basic.
-    Do NOT use these words: {past_words}
+    Do NOT use these words: {', '.join(past_words)}
 
     The word MUST be different from previous outputs and MUST be a real word in the Italian language.
 
@@ -85,22 +90,23 @@ def generate_word():
         )
 
         if response.status_code == 200:
-            print("Full Mistral API JSON Response:", response.json())
+            json_response = response.json()
+            print("Full Mistral API JSON Response:", json_response)
 
-            content = response.json()['choices'][0]['message']['content']
+            content = json_response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
             print("Extracted Content from API:\n", content)
 
             lines = [line.strip() for line in content.split("\n") if line.strip()]
 
             word = None
-            for line in lines:
+            for i, line in enumerate(lines):
                 if line.lower().startswith("word:"):
-                    word = line.split(":", 1)[1].strip()
+                    word = lines[i + 1].strip() if (i + 1) < len(lines) else line.split(":", 1)[1].strip()
                     break
 
             if word:
-                if not history or word not in history:
-                    if is_valid_italian_word(word):  # ✅ Check if word is real
+                if word not in history:
+                    if is_valid_italian_word(word):  # Check if word is real
                         save_word(word)
                         return content
                     else:
@@ -115,7 +121,7 @@ def generate_word():
             exit(1)
 
         elif response.status_code == 429:
-            print("Rate limit exceeded! Waiting 30 seconds before retrying...")
+            print("⚠️ Rate limit exceeded! Waiting 30 seconds before retrying...")
             time.sleep(30)
         else:
             print("Mistral API Error:", response.json())
@@ -123,8 +129,6 @@ def generate_word():
         attempts += 1
 
     return None
-
-
 
 def post_to_mastodon(text):
     """Posts the generated word and sentence to Mastodon."""
