@@ -49,7 +49,7 @@ def generate_word():
         exit(1)
 
     history = load_history()
-    past_words = list(history)[-50:] if history else []  # Limit to last 50 words
+    past_words = list(history)[-100:] if history else []  # Limit to last 100 words
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     prompt = f"""
