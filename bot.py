@@ -101,7 +101,11 @@ def generate_word():
             word = None
             for i, line in enumerate(lines):
                 if line.lower().startswith("word:"):
-                    word = lines[i + 1].strip() if (i + 1) < len(lines) else line.split(":", 1)[1].strip()
+                    parts = line.split(":", 1)
+                    if len(parts) > 1 and parts[1].strip():
+                        word = parts[1].strip()
+                    elif i + 1 < len(lines):
+                        word = lines[i + 1].strip()
                     break
 
             if word:
