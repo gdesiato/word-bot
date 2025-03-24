@@ -10,3 +10,4 @@ gelosia
 sollievo
 famiglia
 ristorante
+panorama
