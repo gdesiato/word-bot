@@ -12,3 +12,4 @@ famiglia
 ristorante
 panorama
 forza
+amicizia
