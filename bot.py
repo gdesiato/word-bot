@@ -51,7 +51,7 @@ def generate_word():
     history = load_history()
     past_words = list(history)[-100:] if history else []  # Limit to last 100 words
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
     prompt = f"""
     As of {timestamp}, generate a random Italian word that is commonly used but not overly basic.
     Do NOT use these words: {', '.join(past_words)}
@@ -60,19 +60,20 @@ def generate_word():
 
     If the word is a verb, the example sentence MUST use the verb exactly as it was generated.
     If the word is NOT a verb, the sentence MUST use the word itself (not a related verb or derivative).
-    
+    The generated word needs to be reported in the sentence as is.
+
     Format the response exactly as follows:
-    
+
     Word: [Italian word]
-    
+
     Example sentence:
     "[Example sentence in Italian using that word exactly]"
-    
+
     Translation:
     "[English translation]"
-    
+
     #Italian #LearnItalian #ItalianWord #Italy
-    
+
     Ensure the output follows this exact format with line breaks and no extra text.
     """
 
