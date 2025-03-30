@@ -17,3 +17,4 @@ pranzo
 viaggio
 fortuna
 momento
+palestra
