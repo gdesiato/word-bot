@@ -18,3 +18,4 @@ viaggio
 fortuna
 momento
 palestra
+cena
