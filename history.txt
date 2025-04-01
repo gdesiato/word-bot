@@ -19,3 +19,4 @@ fortuna
 momento
 palestra
 cena
+curiosità
