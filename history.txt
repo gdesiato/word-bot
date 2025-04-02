@@ -20,3 +20,4 @@ momento
 palestra
 cena
 curiosità
+paesaggio
