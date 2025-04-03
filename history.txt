@@ -21,3 +21,4 @@ palestra
 cena
 curiosità
 paesaggio
+ispirazione
