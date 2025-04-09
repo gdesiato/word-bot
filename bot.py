@@ -72,7 +72,7 @@ def generate_word():
     Translation:
     "[English translation]"
 
-    #Italian #LearnItalian #ItalianWord #Italy
+    #Italian #LearnItalian #ItalianWord #Italy #Language
 
     Ensure the output follows this exact format with line breaks and no extra text.
     """
