@@ -34,3 +34,4 @@ emozione
 cappotto
 fiore
 esperienza
+parola
