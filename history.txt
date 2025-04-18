@@ -36,3 +36,4 @@ fiore
 esperienza
 parola
 incanto
+scelta
