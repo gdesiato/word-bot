@@ -37,3 +37,4 @@ esperienza
 parola
 incanto
 scelta
+libro
