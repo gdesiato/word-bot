@@ -38,3 +38,4 @@ parola
 incanto
 scelta
 libro
+serenità
