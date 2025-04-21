@@ -39,3 +39,4 @@ incanto
 scelta
 libro
 serenità
+giornata
