@@ -40,3 +40,4 @@ scelta
 libro
 serenità
 giornata
+evento
