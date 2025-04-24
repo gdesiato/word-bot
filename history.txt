@@ -42,3 +42,4 @@ serenità
 giornata
 evento
 progetto
+ricordo
