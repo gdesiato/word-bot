@@ -49,3 +49,4 @@ treno
 musica
 paziente
 cucina
+ambiente
