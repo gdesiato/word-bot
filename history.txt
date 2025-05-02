@@ -50,3 +50,4 @@ musica
 paziente
 cucina
 ambiente
+autunno
