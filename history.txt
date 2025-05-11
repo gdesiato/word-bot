@@ -59,3 +59,4 @@ quaderno
 sorpresa
 lavoro
 gruppo
+ambizione
