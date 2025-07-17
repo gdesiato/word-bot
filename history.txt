@@ -65,3 +65,4 @@ adattamento
 tramonto
 bizzarro
 ombra
+**sussurro**
