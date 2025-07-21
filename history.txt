@@ -69,3 +69,4 @@ ombra
 **bicchiere**
 **meriggiare**
 **sussulto**
+**scintilla**
