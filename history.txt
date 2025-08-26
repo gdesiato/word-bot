@@ -70,3 +70,4 @@ ombra
 **meriggiare**
 **sussulto**
 **scintilla**
+**scorcio**
