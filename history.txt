@@ -72,3 +72,4 @@ ombra
 **scintilla**
 **scorcio**
 **mormorare**
+**sbigottire**
