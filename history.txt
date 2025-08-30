@@ -74,3 +74,4 @@ ombra
 **mormorare**
 **sbigottire**
 **scompiglio**
+**sfogliare**
