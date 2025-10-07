@@ -106,3 +106,4 @@ ombra
 **meraviglia**
 **saggezza**
 **sbadiglio**
+**bizzarria**
