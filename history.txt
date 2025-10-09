@@ -108,3 +108,4 @@ ombra
 **sbadiglio**
 **bizzarria**
 **chiacchierone**
+**calamita**
