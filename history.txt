@@ -112,3 +112,4 @@ ombra
 **scintiglio**
 **marmellata**
 **scrupolo**
+**sbigottito**
