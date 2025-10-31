@@ -120,3 +120,4 @@ ombra
 **tramonto**
 **zanzariera**
 **sghignazzata**
+**guscio**
