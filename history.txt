@@ -121,3 +121,4 @@ ombra
 **zanzariera**
 **sghignazzata**
 **guscio**
+**scorciatoia**
