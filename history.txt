@@ -123,3 +123,4 @@ ombra
 **guscio**
 **scorciatoia**
 **maremma**
+**chiacchiera**
