@@ -140,3 +140,4 @@ ombra
 **scaramuccia**
 **grembiule**
 **groviglio**
+**sussurrare**
