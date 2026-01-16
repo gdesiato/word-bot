@@ -113,7 +113,7 @@ def generate_word():
                     break
 
             if word:
-                if word not in history:
+                if word not in past_words:
                     if is_valid_italian_word(word):  # Check if word is real
                         save_word(word)
                         return content
