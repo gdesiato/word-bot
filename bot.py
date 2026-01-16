@@ -12,10 +12,10 @@ HISTORY_FILE = "history.txt"
 def load_history():
     """Loads past words from history.txt to prevent duplicates."""
     try:
-        with open(HISTORY_FILE, "r", encoding="utf-8") as file:
-            return {line.strip() for line in file if line.strip()}
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            past_words = [l.strip() for l in f if l.strip()][-100:]
     except FileNotFoundError:
-        return set()
+        past_words = []
 
 def save_word(word):
     """Saves the new word to history.txt and commits it to GitHub."""
@@ -32,15 +32,14 @@ def save_word(word):
         print("Git commit failed, but execution will continue.")
 
 def is_valid_italian_word(word):
-    """Checks if the word exists in Italian using Wiktionary API."""
     url = f"https://it.wiktionary.org/w/api.php?action=query&titles={word}&format=json"
     try:
-        response = requests.get(url, timeout=5)
-        data = response.json()
-        return "-1" not in data.get("query", {}).get("pages", {})
-    except requests.exceptions.RequestException as e:
-        print(f"Wiktionary API request failed: {e}")
-        return True  # Assume valid if API fails to avoid blocking execution
+        r = requests.get(url, timeout=5)
+        pages = r.json().get("query", {}).get("pages", {})
+        return not any("missing" in page for page in pages.values())
+    except Exception as e:
+        print("Wiktionary check failed:", e)
+        return True
 
 def generate_word():
     """Fetches a random Italian word, ensuring uniqueness and validity."""
@@ -49,7 +48,8 @@ def generate_word():
         exit(1)
 
     history = load_history()
-    past_words = list(history)[-100:] if history else []  # Limit to last 100 words
+    with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+        past_words = [l.strip() for l in f if l.strip()][-100:]
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     prompt = f"""
@@ -89,7 +89,8 @@ def generate_word():
         response = requests.post(
             "https://api.mistral.ai/v1/chat/completions",
             headers=headers,
-            json={"model": "mistral-medium", "messages": [{"role": "user", "content": prompt}]}
+            json={"model": "mistral-small","messages": [{"role": "user", "content": prompt}],"temperature": 0.8
+                 }
         )
 
         if response.status_code == 200:
@@ -128,8 +129,9 @@ def generate_word():
             exit(1)
 
         elif response.status_code == 429:
-            print("⚠️ Rate limit exceeded! Waiting 30 seconds before retrying...")
-            time.sleep(30)
+            print("Rate limit exceeded! Waiting 60 seconds before retrying...")
+            time.sleep(60)
+            continue 
         else:
             print("Mistral API Error:", response.json())
 
@@ -153,4 +155,4 @@ if __name__ == "__main__":
         print("Generated Content:\n", content)
         post_to_mastodon(f"Word of the Day:\n\n{content}")
     else:
-        print("No new word found. Nothing will be posted.")
+        print("Failed after retries — API never returned a valid response.")
