@@ -148,3 +148,4 @@ ombra
 **mormorio**
 **fragore**
 **lampadario**
+**solitudine**
