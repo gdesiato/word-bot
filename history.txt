@@ -149,3 +149,4 @@ ombra
 **fragore**
 **lampadario**
 **solitudine**
+**luminoso**
