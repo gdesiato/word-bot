@@ -152,3 +152,4 @@ ombra
 **luminoso**
 **baluginare**
 **solletico**
+**frammento**
