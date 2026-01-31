@@ -161,3 +161,4 @@ ombra
 **lampione**
 **laccetto**
 **accovacciarsi**
+**lampadina**
