@@ -162,3 +162,4 @@ ombra
 **laccetto**
 **accovacciarsi**
 **lampadina**
+**gocciolio**
