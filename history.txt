@@ -165,3 +165,4 @@ ombra
 **gocciolio**
 **passeggiare**
 **accanimento**
+**pigrone**
