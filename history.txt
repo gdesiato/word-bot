@@ -175,3 +175,4 @@ ombra
 **accasciarsi**
 **spolverata**
 **sbadataggine**
+**accigliarsi**
