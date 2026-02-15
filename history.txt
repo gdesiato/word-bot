@@ -176,3 +176,4 @@ ombra
 **spolverata**
 **sbadataggine**
 **accigliarsi**
+**sbadato**
