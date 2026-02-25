@@ -185,3 +185,4 @@ ombra
 **scorbutico**
 **sbadiglino**
 **accorciare**
+**laccare**
