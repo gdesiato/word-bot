@@ -194,3 +194,4 @@ ombra
 **sciabola**
 **baluginio**
 **spavalderia**
+**pavoneggiarsi**
