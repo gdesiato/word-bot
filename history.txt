@@ -196,3 +196,4 @@ ombra
 **spavalderia**
 **pavoneggiarsi**
 **melodia**
+**pendolare**
