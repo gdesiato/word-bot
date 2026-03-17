@@ -198,3 +198,4 @@ ombra
 **melodia**
 **pendolare**
 **sciabordio**
+**affaccendarsi**
