@@ -199,3 +199,4 @@ ombra
 **pendolare**
 **sciabordio**
 **affaccendarsi**
+**taciturno**
