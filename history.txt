@@ -200,3 +200,4 @@ ombra
 **sciabordio**
 **affaccendarsi**
 **taciturno**
+**rinascita**
