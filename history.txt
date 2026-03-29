@@ -210,3 +210,4 @@ ombra
 **tacere**
 **cavillare**
 **zampillo**
+**fatuo**
