@@ -215,3 +215,4 @@ ombra
 **inciampo**
 **cicala**
 **affanno**
+**taccuino**
