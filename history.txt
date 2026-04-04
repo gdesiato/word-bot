@@ -216,3 +216,4 @@ ombra
 **cicala**
 **affanno**
 **taccuino**
+**ronzare**
