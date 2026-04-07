@@ -219,3 +219,4 @@ ombra
 **ronzare**
 **smeriglio**
 **sbrigare**
+**trambusto**
