@@ -240,3 +240,4 @@ ombra
 **sbrinare**
 **sbuffare**
 **abbaino**
+**rigovernare**
