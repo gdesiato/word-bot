@@ -247,3 +247,4 @@ ombra
 **cincischiare**
 **cartoccio**
 **rimbambire**
+**meriggiare**
