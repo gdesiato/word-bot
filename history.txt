@@ -255,3 +255,4 @@ ombra
 **scialacquare**
 **risaputo**
 **sbuffo**
+**soffermarsi**
