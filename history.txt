@@ -256,3 +256,4 @@ ombra
 **risaputo**
 **sbuffo**
 **soffermarsi**
+**solfeggiare**
