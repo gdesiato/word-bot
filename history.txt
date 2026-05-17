@@ -257,3 +257,4 @@ ombra
 **sbuffo**
 **soffermarsi**
 **solfeggiare**
+**sbrindellato**
