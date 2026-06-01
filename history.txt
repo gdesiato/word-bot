@@ -271,3 +271,4 @@ ombra
 **incartare**
 **sbuffone**
 **favilla**
+**scampare**
