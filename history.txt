@@ -279,3 +279,4 @@ ombra
 **zibaldone**
 **cianciare**
 **peregrinare**
+**rinvenire**
