@@ -292,3 +292,4 @@ ombra
 **scervellarsi**
 **sognacchiare**
 **groviglio**
+**sovrapporre**
