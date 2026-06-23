@@ -293,3 +293,4 @@ ombra
 **sognacchiare**
 **groviglio**
 **sovrapporre**
+**rimarcare**
