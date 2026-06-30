@@ -300,3 +300,4 @@ ombra
 **ronzio**
 **pastrocchio**
 **sfarfallare**
+**quercia**
