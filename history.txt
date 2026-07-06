@@ -306,3 +306,4 @@ ombra
 **prodigio**
 **penombra**
 **sghembo**
+**sciogliere**
