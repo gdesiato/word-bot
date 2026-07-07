@@ -307,3 +307,4 @@ ombra
 **penombra**
 **sghembo**
 **sciogliere**
+**sciabica**
