@@ -322,3 +322,4 @@ ombra
 **scalcinare**
 **smerigliare**
 **merluzzo**
+**poltrona**
