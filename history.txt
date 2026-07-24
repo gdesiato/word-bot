@@ -324,3 +324,4 @@ ombra
 **merluzzo**
 **poltrona**
 **bica**
+**alacre**
