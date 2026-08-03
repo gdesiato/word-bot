@@ -334,3 +334,4 @@ ombra
 **spigliatezza**
 **spilungone**
 **frastuono**
+**galeotta**
