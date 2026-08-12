@@ -343,3 +343,4 @@ ombra
 **pispolare**
 **strascicare**
 **spensierato**
+**compiere**
