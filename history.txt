@@ -346,3 +346,4 @@ ombra
 **compiere**
 **arucciare**
 **merlare**
+**penitenza**
