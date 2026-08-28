@@ -359,3 +359,4 @@ ombra
 **sovraffollare**
 **libeccio**
 **imbrunire**
+**meriggiare**
