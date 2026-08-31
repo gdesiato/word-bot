@@ -362,3 +362,4 @@ ombra
 **meriggiare**
 **pasticcio**
 **abbagliare**
+**merenda**
