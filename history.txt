@@ -364,3 +364,4 @@ ombra
 **abbagliare**
 **merenda**
 **polentone**
+**sbrigare**
